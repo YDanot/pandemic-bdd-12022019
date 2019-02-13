@@ -1,3 +1,7 @@
+package features.standard;
+
+import cucumber.api.PendingException;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import features.Network;
@@ -15,7 +19,6 @@ public class StandardDefinitionSteps {
         this.game = game;
     }
 
-
     @Given("^the occident initial sub-network$")
     public void theOccidentInitialSubNetwork() throws Throwable {
         Network network = createCities(PARIS, LONDON, MADRID, ESSEN, MILAN, ALGIERS, NEW_YORK);
@@ -25,14 +28,17 @@ public class StandardDefinitionSteps {
         network.addLink(PARIS, ESSEN);
         network.addLink(PARIS, MILAN);
         network.addLink(PARIS, ALGIERS);
-        network.addLink(LONDON, ESSEN);
-        network.addLink(LONDON, MADRID);
-        network.addLink(ALGIERS, MADRID);
         network.addLink(MILAN, ESSEN);
+        network.addLink(LONDON, ESSEN);
+
+        network.addLink(ALGIERS, MADRID);
+        network.addLink(NEW_YORK, LONDON);
+        network.addLink(NEW_YORK, MADRID);
+
     }
 
     private Network createCities(CityName... cityNames) {
-        Network network = new Network();
+        Network network = game.network();
         for (CityName cityName : cityNames) {
             network.addCity(cityName);
         }
@@ -42,5 +48,11 @@ public class StandardDefinitionSteps {
     @Then("^the network should be:$")
     public void theNetworkShouldBe(Network network) throws Throwable {
         Assertions.assertThat(game.network()).isEqualTo(network);
+    }
+
+    @And("^all cities should have the infection levels of (\\d+)$")
+    public void allCitiesShouldHaveTheInfectionLevelsOf(int infectionLevel) throws Throwable {
+        final boolean allMatch = game.network().cityMap.values().stream().allMatch(c -> c.infectionLevel() == infectionLevel);
+        Assertions.assertThat(allMatch).isTrue();
     }
 }

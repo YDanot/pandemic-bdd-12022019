@@ -1,7 +1,9 @@
-package features;
+package features.standard;
 
 import cucumber.api.TypeRegistry;
 import cucumber.api.TypeRegistryConfigurer;
+import features.Network;
+import infection.CityName;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.datatable.DataTableType;
 
@@ -26,11 +28,10 @@ public class GraphConfigurer implements TypeRegistryConfigurer {
                 List<List<String>> lines = raw.asLists();
                 List<String> head = head(lines);
                 List<String> columnTitles = tail(head);
-                System.out.println("cols :");
-                columnTitles.forEach(System.out::println);
+
+                columnTitles.forEach(c -> network.addCity(CityName.valueOf(c.toUpperCase())));
                 List<String> lineTitles = tail(lines).stream().map(l->l.get(0)).collect(Collectors.toList());
-                System.out.println("lines :");
-                lineTitles.forEach(System.out::println);
+
                 for (int i = 0; i < columnTitles.size(); i++) {
                     for (int j = 0; j < lineTitles.size()-(i+1); j++) {
                         List<String> line = lines.get(i + 1);
@@ -38,7 +39,7 @@ public class GraphConfigurer implements TypeRegistryConfigurer {
                         if(s.equals("x")){
                             String cityA = columnTitles.get(j);
                             String cityB = lineTitles.get(i);
-
+                            network.addLink(CityName.valueOf(cityA.toUpperCase()),CityName.valueOf(cityB.toUpperCase()));
 
                         }
                     }

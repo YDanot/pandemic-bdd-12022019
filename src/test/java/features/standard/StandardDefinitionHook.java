@@ -1,7 +1,6 @@
-package features;
+package features.standard;
 
 import cucumber.api.java.Before;
-import features.standard.StandardDefinitionSteps;
 import game.Game;
 
 public class StandardDefinitionHook {
@@ -12,7 +11,7 @@ public class StandardDefinitionHook {
         this.game = game;
     }
 
-    @Before("@occidental")
+    @Before("~@occidental")
     public void occidental() throws Throwable {
         new StandardDefinitionSteps(game).theOccidentInitialSubNetwork();
     }
